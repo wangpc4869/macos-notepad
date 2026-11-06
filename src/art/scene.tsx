@@ -3,6 +3,7 @@ import type { ReactElement, ReactNode } from 'react'
 import type { WpcSkin } from '../../shared/types'
 import castAria from '../assets/cast/aria.jpg'
 import castFleet from '../assets/cast/fleet.jpg'
+import castHush from '../assets/cast/hush.jpg'
 import castManga from '../assets/cast/manga.jpg'
 import castMecha from '../assets/cast/mecha.jpg'
 import castNight from '../assets/cast/night.jpg'
@@ -18,6 +19,7 @@ const wpc_cast: Partial<Record<WpcSkin, string>> = {
   tide: castTide,
   night: castNight,
   noir: castNoir,
+  hush: castHush,
   youth: castYouth,
   fleet: castFleet,
   manga: castManga,
@@ -76,7 +78,9 @@ export const WpcFox = ({ className }: { className?: string }): ReactElement => {
  */
 export const WpcMascot = ({ skin, className }: { skin: WpcSkin; className?: string }): ReactElement => {
   const portrait = wpc_cast[skin]
-  if (portrait) return <img className={className ? `${className} cast-portrait` : 'cast-portrait'} src={portrait} alt="" />
+  if (portrait) {
+    return <img className={className ? `${className} cast-portrait` : 'cast-portrait'} src={portrait} alt="" draggable={false} />
+  }
   return <WpcFox className={className} />
 }
 

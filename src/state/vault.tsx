@@ -49,6 +49,7 @@ export const WpcVaultProvider = ({ children }: { children: ReactNode }): ReactEl
   const savedRef = useRef('')
   const timerRef = useRef<number | null>(null)
   const noticeRef = useRef<number | null>(null)
+  const writingRef = useRef(false)
 
   const wpc_notify = useCallback((text: string): void => {
     setNotice(text)
@@ -65,23 +66,34 @@ export const WpcVaultProvider = ({ children }: { children: ReactNode }): ReactEl
     if (result.ok) savedRef.current = json
   }, [])
 
+  /**
+   * 把内存里最新的手稿写下去。上一笔还在写时先让开，写完再补最新的一笔。
+   */
+  const wpc_flush = useCallback(async (): Promise<void> => {
+    if (writingRef.current) return
+    const current = latestRef.current
+    if (!current) return
+    const json = JSON.stringify(current)
+    if (json === savedRef.current) return
+    writingRef.current = true
+    try {
+      await wpc_saveVault(current)
+      if (JSON.stringify(latestRef.current) === json) savedRef.current = json
+    } catch (saveError) {
+      wpc_notify(saveError instanceof Error ? saveError.message : '保存失败')
+    } finally {
+      writingRef.current = false
+      const latest = latestRef.current
+      if (latest && JSON.stringify(latest) !== json) void wpc_flush()
+    }
+  }, [wpc_notify])
+
   const wpc_schedule = useCallback((): void => {
     if (timerRef.current) window.clearTimeout(timerRef.current)
     timerRef.current = window.setTimeout(() => {
-      void (async () => {
-        const current = latestRef.current
-        if (!current) return
-        const json = JSON.stringify(current)
-        if (json === savedRef.current) return
-        try {
-          await wpc_saveVault(current)
-          if (JSON.stringify(latestRef.current) === json) savedRef.current = json
-        } catch (saveError) {
-          wpc_notify(saveError instanceof Error ? saveError.message : '保存失败')
-        }
-      })()
+      void wpc_flush()
     }, 280)
-  }, [wpc_notify])
+  }, [wpc_flush])
 
   const wpc_mutate = useCallback(
     (recipe: (vault: WpcVault) => WpcVault, immediate = false): void => {

@@ -106,7 +106,7 @@ release/hoshisen-1.0.0-arm64.dmg
 
 ## 皮肤
 
-皮肤编号在 `shared/types.ts`，名字和句子在 `src/lib/skins.ts`，颜色在 `src/styles/global.css`。当前有晴窗、樱信、潮灯、夜笺、夜探、春日、远航、墨格、霆甲。选中的皮肤同时记在手稿和本机，下次打开不用等手稿读完才上色。
+皮肤编号在 `shared/types.ts`，名字和句子在 `src/lib/skins.ts`，颜色在 `src/styles/global.css`。当前有晴窗、樱信、潮灯、夜笺、工藤新一、毛利兰、春日、远航、墨格、霆甲。工藤新一和毛利兰是一对男女侦探。选中的皮肤同时记在手稿和本机，下次打开不用等手稿读完才上色。
 
 人物图在 `src/assets/cast/`，都是为星笺画的，不要换成现成作品里的角色。
 

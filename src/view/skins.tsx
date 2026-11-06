@@ -62,7 +62,7 @@ export const WpcSkinCenter = ({
             </div>
             <WpcCloseButton onClose={onClose} />
           </div>
-          <p className="quiet">日常四款随时可换。剧场还有雨夜、放学、出海、墨线漫画，以及一套霆甲。</p>
+          <p className="quiet">日常四款随时可换。剧场里有一对男女侦探，还有放学、出海、墨线漫画，以及一套霆甲。</p>
         </header>
         <div className="center-scroll">
           <div className="center-grid">
@@ -255,9 +255,10 @@ export const WpcAtmosphere = ({ skin }: { skin: WpcSkin }): ReactElement => {
       </div>
     )
   }
-  if (skin === 'noir') {
+  if (skin === 'noir' || skin === 'hush') {
     return (
       <div className="rain-field" aria-hidden="true">
+        {skin === 'hush' ? <i className="hush-spot" /> : null}
         <WpcDrift kind="rain-drop" duration={0.85} />
       </div>
     )

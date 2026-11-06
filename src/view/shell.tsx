@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { ReactElement } from 'react'
 import { wpc_runningEntry } from '../../shared/pure'
 import type { WpcPage, WpcSkin } from '../../shared/types'
@@ -33,22 +33,21 @@ export const WpcShell = (): ReactElement => {
   const [skinOpen, setSkinOpen] = useState(false)
   const [centerOpen, setCenterOpen] = useState(false)
   const [skin, setSkin] = useState<WpcSkin>(() => wpc_storedSkin())
-  const [hopping, setHopping] = useState(false)
   const [wash, setWash] = useState(0)
+  const skinReady = useRef(false)
   const [calm, setCalm] = useState(false)
   const desktop = typeof window !== 'undefined' && Boolean(window.hoshisen)
   const running = vault ? wpc_runningEntry(vault.times) : null
   const showSplash = !entered || !ready || Boolean(error)
 
+  /**
+   * 换皮肤。以这一次点击为准，不被上一笔还没写完的手稿盖回去。
+   */
   const wpc_pickSkin = (next: WpcSkin): void => {
     wpc_applySkin(next)
     setSkin(next)
-    setHopping(true)
-    window.setTimeout(() => setHopping(false), 700)
     setWash((value) => value + 1)
-    if (vault && vault.profile.skin !== next) {
-      wpc_mutate((current) => ({ ...current, profile: { ...current.profile, skin: next } }))
-    }
+    wpc_mutate((current) => (current.profile.skin === next ? current : { ...current, profile: { ...current.profile, skin: next } }))
     wpc_notify(wpc_skinMeta(next).hello)
   }
 
@@ -95,7 +94,8 @@ export const WpcShell = (): ReactElement => {
   }, [])
 
   useEffect(() => {
-    if (!vault) return
+    if (!vault || skinReady.current) return
+    skinReady.current = true
     setSkin(vault.profile.skin)
     wpc_applySkin(vault.profile.skin)
   }, [vault])
@@ -185,10 +185,7 @@ export const WpcShell = (): ReactElement => {
                 ) : (
                   <WpcWhisper skin={skin} />
                 )}
-                <WpcMascot skin={skin} className={hopping ? 'fox-mini is-hop' : 'fox-mini'} />
-                <button type="button" className="text-link" onClick={() => setSheetOpen(true)}>
-                  手稿在项目 data 里
-                </button>
+                <WpcMascot skin={skin} className="fox-mini" />
               </div>
             </aside>
             <main className="content">

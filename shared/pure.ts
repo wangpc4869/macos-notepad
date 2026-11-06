@@ -23,7 +23,7 @@ const wpc_categories: WpcCategory[] = ['work', 'study', 'life', 'travel', 'rest'
 /**
  * 认出手稿里的皮肤。认不出时用晴窗。
  */
-const wpc_skinIds: WpcSkin[] = ['aria', 'sakura', 'tide', 'night', 'noir', 'youth', 'fleet', 'manga', 'mecha']
+const wpc_skinIds: WpcSkin[] = ['aria', 'sakura', 'tide', 'night', 'noir', 'hush', 'youth', 'fleet', 'manga', 'mecha']
 
 export const wpc_readSkin = (value: unknown): WpcSkin =>
   wpc_skinIds.find((item) => item === value) ?? 'aria'

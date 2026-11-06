@@ -74,7 +74,7 @@ export interface WpcAsset {
   createdAt: string
 }
 
-export type WpcSkin = 'aria' | 'sakura' | 'tide' | 'night' | 'noir' | 'youth' | 'fleet' | 'manga' | 'mecha'
+export type WpcSkin = 'aria' | 'sakura' | 'tide' | 'night' | 'noir' | 'hush' | 'youth' | 'fleet' | 'manga' | 'mecha'
 
 export interface WpcProfile {
   displayName: string
