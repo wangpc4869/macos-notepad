@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>星笺</title>
+    <link rel="icon" href="./favicon.svg" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #e7f3ff;
+      }
+      html[data-skin='sakura'],
+      html[data-skin='sakura'] body { background: #fff1f6; }
+      html[data-skin='tide'],
+      html[data-skin='tide'] body { background: #e5f6f3; }
+      html[data-skin='night'],
+      html[data-skin='night'] body { background: #100e1c; }
+      html[data-skin='noir'],
+      html[data-skin='noir'] body { background: #10182c; }
+      html[data-skin='youth'],
+      html[data-skin='youth'] body { background: #fff4e8; }
+      html[data-skin='fleet'],
+      html[data-skin='fleet'] body { background: #e7f3ff; }
+      html[data-skin='manga'],
+      html[data-skin='manga'] body { background: #f4f0e6; }
+      html[data-skin='mecha'],
+      html[data-skin='mecha'] body { background: #0d121c; }
+    </style>
+    <script>
+      try {
+        const saved = localStorage.getItem('hoshisen.skin')
+        const known = ['aria', 'sakura', 'tide', 'night', 'noir', 'youth', 'fleet', 'manga', 'mecha']
+        const skin = known.includes(saved) ? saved : 'aria'
+        document.documentElement.dataset.skin = skin
+      } catch (error) {
+        document.documentElement.dataset.skin = 'aria'
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

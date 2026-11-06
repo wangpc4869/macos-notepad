@@ -1,0 +1,13 @@
+node_modules
+dist
+dist-electron
+release
+.DS_Store
+*.log
+data/**/*.tmp
+data/runtime
+data/vault.json
+data/media
+data/backups
+data/exports
+build/icon.iconset

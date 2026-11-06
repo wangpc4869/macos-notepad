@@ -1,0 +1,79 @@
+{
+  "name": "hoshisen",
+  "private": true,
+  "version": "1.0.0",
+  "description": "星笺 — 本地手帐，记下工作与生活",
+  "type": "module",
+  "main": "dist-electron/main.cjs",
+  "scripts": {
+    "icon": "python3 scripts/paint-icon.py && bash scripts/make-icns.sh",
+    "build:electron": "esbuild electron/main.ts --bundle --platform=node --format=cjs --outfile=dist-electron/main.cjs --external:electron && esbuild electron/preload.ts --bundle --platform=node --format=cjs --outfile=dist-electron/preload.cjs --external:electron && bash scripts/build-location.sh",
+    "predev": "npm run build:electron",
+    "dev": "HOSHISEN_DEV=1 concurrently -k -n vite,app \"vite --host 127.0.0.1 --port 5173 --strictPort\" \"wait-on -t 60000 http://127.0.0.1:5173 && electron .\"",
+    "build:web": "vite build",
+    "desktop": "npm run build:electron && npm run build:web && open \"$PWD/node_modules/electron/dist/Electron.app\" --args \"$PWD\"",
+    "dist:mac": "npm run icon && npm run build:electron && npm run build:web && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac dir && bash scripts/make-dmg.sh",
+    "open": "npm run dev",
+    "typecheck": "tsc --noEmit"
+  },
+  "build": {
+    "appId": "app.hoshisen.local",
+    "productName": "星笺",
+    "asar": true,
+    "npmRebuild": false,
+    "electronDist": "node_modules/electron/dist",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist-electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "dist",
+        "to": "dist"
+      },
+      {
+        "from": "build/LocationHelper.app",
+        "to": "LocationHelper.app"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "identity": null,
+      "icon": "build/icon.icns",
+      "artifactName": "hoshisen-${version}-${arch}.${ext}",
+      "target": [
+        {
+          "target": "dir",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ],
+      "extendInfo": {
+        "NSLocationUsageDescription": "星笺用来显示你现在所在城市的天气。",
+        "NSLocationWhenInUseUsageDescription": "星笺用来显示你现在所在城市的天气。"
+      }
+    }
+  },
+  "dependencies": {
+    "framer-motion": "^14.9.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "concurrently": "^10.0.6",
+    "electron": "^45.2.3",
+    "electron-builder": "^26.18.0",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.6",
+    "wait-on": "^9.5.1"
+  }
+}
